@@ -1,0 +1,7 @@
+SELECT
+distinct Rtrim(Ltrim(h1.page.hostname,'www.'),'.ru'), h1.transaction.transactionId, h1.transaction.transactionrevenue, t1.date,
+		t2.trafficSource.source, t2.trafficSource.campaign, t2.trafficSource.keyword, t2.device.deviceCategory, 1 as status,0,0,'Asociated','Ассоциированная',1,0
+from `glowing-cargo-144610.{0}.session_streaming_2017*` t1, unnest(t1.hits) as h1
+left join `glowing-cargo-144610.{0}.session_streaming_2017*` t2 ON (t1.clientId=t2.clientId), unnest(t2.hits) as h2
+where t1._TABLE_SUFFIX >= '{1}' and t2._TABLE_SUFFIX BETWEEN '{2}' and '{3}'
+	and h1.transaction.transactionId is not null and t2.trafficSource.medium='cpc' and t1.trafficSource.medium!='cpc' and h1.time>h2.time 	
